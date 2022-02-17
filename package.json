@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
+    "format": "prettier . --write"
   },
   "dependencies": {
     "core-js": "^3.6.5",
@@ -13,6 +14,7 @@
     "vue-router": "^4.0.0-0"
   },
   "devDependencies": {
+    "@types/d3": "^7.1.0",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
     "@vue/cli-plugin-babel": "~4.5.0",

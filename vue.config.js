@@ -3,4 +3,7 @@ module.exports = {
   pages: {
     index: "src/main.ts",
   },
+  pluginOptions: {
+    windicss: {},
+  },
 };
