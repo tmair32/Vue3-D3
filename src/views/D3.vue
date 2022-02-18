@@ -4,7 +4,7 @@
     <pie-chart :chartData="objectData" xKey="name" yKey="amount" />
 
     <!-- || Control Bar || -->
-    <div>
+    <!-- <div>
       <label for="itemCount">Record Count: </label>
       <input id="itemCount" v-model.number="itemCount" type="number" />
     </div>
@@ -15,7 +15,7 @@
     <div>
       <label for="max">Max Value: </label>
       <input id="max" v-model.number="max" type="number" max="100" />
-    </div>
+    </div> -->
 
     <!-- || Line Area Chart || -->
     <line-area-chart

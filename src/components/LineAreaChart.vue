@@ -1,10 +1,10 @@
 <template>
   <div class="text-pink-400">
-    <div>
+    <!-- <div>
       Scale X: {{ scaleX(0) }}
       <br />
       Scale Y: {{ scaleY(0) }}
-    </div>
+    </div> -->
     <div class="flex justify-center">
       <svg ref="chartRef" :width="width" :height="height">
         <g>

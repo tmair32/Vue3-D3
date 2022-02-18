@@ -1,7 +1,15 @@
 <template>
   <div ref="containerRef" class="flex justify-center">
-    <svg ref="chartRef" :width="svgWidth" :height="svgHeight">
-      <g v-for="item in chartData" class="slice" :key="item[xKey]" />
+    <svg :width="svgWidth" :height="svgHeight">
+      <g
+        class="stroke-white stroke-2 stroke-join-auto"
+        :transform="pieTransform"
+      >
+        <path class="arc" v-for="item in chartData" :key="item[xKey]" />
+      </g>
+      <g class="font-sans" :transform="pieTransform">
+        <text class="text" v-for="item in chartData" :key="item[xKey]" />
+      </g>
     </svg>
   </div>
 </template>
@@ -24,10 +32,6 @@ import {
   selectAll,
 } from "d3";
 
-interface Ref<T> {
-  value: T;
-}
-
 interface chartDataItem {
   [key: string]: string | number;
   name: string;
@@ -46,42 +50,77 @@ const state = reactive<State>({
   svgHeight: 0,
 });
 
-const drawChart = (chartData: chartDataItems, yKey: string) => {
-  const containerRef = ref();
-  const color = scaleOrdinal(schemeCategory10);
+const getLegendPosition = (
+  type: string,
+  mode: string,
+  i: number,
+  radius: number
+) => {
+  if (type === "x") {
+    return mode === "dot" ? -30 : -15;
+  } else if (type === "y") {
+    return mode === "dot" ? radius + 15 : radius + 20;
+  }
+};
 
-  const pieChartGenerator = computed(() => {
-    return pie<chartDataItem>()
-      .sort(null)
-      .value((d) => d[yKey] as number);
-  });
-  const piePathData = computed(() => pieChartGenerator.value(chartData));
-  const radius = Math.min(state.svgHeight, state.svgWidth) / 2;
-  const arcPath = arc<PieArcDatum<chartDataItem>>()
-    .innerRadius(radius * 0)
-    .outerRadius(radius * 1);
+const drawChart = (chartData: chartDataItems, xKey: string, yKey: string) => {
+  const containerRef = ref();
+
+  const getPieData = pie<chartDataItem>()
+    .sort(null)
+    .value((d) => {
+      return d[yKey] as number;
+    });
+
+  const pieTransform = computed(
+    () => `translate(${state.svgWidth / 2}, ${state.svgHeight / 2})`
+  );
+
+  const color = scaleOrdinal(schemeCategory10);
+  const pieData = getPieData(chartData);
+  const radius = computed(() => Math.min(state.svgWidth, state.svgHeight) / 2);
 
   const chartLoad = () => {
-    selectAll(".slice")
-      .data(piePathData.value)
-      .enter()
-      .append("g")
-      .attr("class", "arc")
-      .append("path")
+    const arcPath = arc<PieArcDatum<chartDataItem>>()
+      .innerRadius(0)
+      .outerRadius(radius.value);
+
+    selectAll(".arc")
+      .data(pieData)
+      .join("path")
+      .transition()
+      .delay((_, i: number) => {
+        return i * 150;
+      })
+      .duration(1000)
       .attr("d", arcPath)
-      .attr("fill", (d, i) => {
-        console.log(d, i);
-        return color(i);
-      });
+      .attr("fill", (d) => color(d.data[xKey] as string));
+  };
+
+  const textLoad = () => {
+    const arcLabel = arc<PieArcDatum<chartDataItem>>()
+      .innerRadius(0)
+      .outerRadius(radius.value);
+    selectAll(".text")
+      .data(pieData)
+      .join("text")
+      .attr("transform", (d) => `translate(${arcLabel.centroid(d)})`)
+      .text((d) => d.data[xKey]);
   };
 
   onMounted(() => {
-    state.svgWidth = containerRef.value.offsetWidth * 0.75;
-    state.svgHeight = containerRef.value.offsetWidth * 0.75;
+    state.svgWidth = containerRef.value.offsetWidth * 0.25;
+    state.svgHeight = containerRef.value.offsetWidth * 0.25;
+
     chartLoad();
+    textLoad();
   });
 
-  return { containerRef, piePathData };
+  return {
+    chartLoad,
+    containerRef,
+    pieTransform,
+  };
 };
 
 export default defineComponent({
@@ -107,17 +146,27 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { containerRef, piePathData } = drawChart(
+    const { containerRef, pieTransform } = drawChart(
       props.chartData,
+      props.xKey,
       props.yKey
     );
-
     return {
       ...toRefs(state),
       containerRef,
-      piePathData,
+      pieTransform,
     };
   },
 });
 </script>
-<style lang=""></style>
+<style scoped>
+.arc text {
+  font: 12px;
+  text-anchor: middle;
+}
+
+.title {
+  fill: green;
+  font-weight: italic;
+}
+</style>
