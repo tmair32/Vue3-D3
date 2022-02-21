@@ -1,5 +1,7 @@
 <template>
   <div class="m-4 flex justify-center flex-col">
+    <!-- || Grouped Bar Chart || -->
+    <grouped-bar-chart :chartData="groupedData" xKey="batch" />
     <!-- || BoxPlot Chart || -->
     <box-plot-chart :chartData="plotData" xKey="name" yKey="amount" />
     <!-- || Zoomable Bar Chart || -->
@@ -37,6 +39,7 @@
 import { defineComponent, onMounted, reactive, toRefs } from "vue";
 import { randomInt, interval, now } from "d3";
 import LineAreaChart from "@/components/LineAreaChart.vue";
+import GroupedBarChart from "@/components/GroupedBarChart.vue";
 // import BarChart from "@/components/BarChart.vue";
 import BarChart from "@/components/BarChartAxis.vue";
 import BoxPlotChart from "@/components/BoxPlotChart.vue";
@@ -59,12 +62,20 @@ type State = {
     min: number;
     max: number;
   }>;
+  groupedData: Array<{
+    name: string;
+    data1: number;
+    data2: number;
+    data3: number;
+    data4: number;
+  }>;
 };
 
 export default defineComponent({
   name: "ChartView",
   components: {
     LineAreaChart,
+    GroupedBarChart,
     BarChart,
     PieChart,
     BoxPlotChart,
@@ -126,6 +137,36 @@ export default defineComponent({
           mid: 160,
           min: 0,
           max: 250,
+        },
+      ],
+      groupedData: [
+        {
+          name: "Roses",
+          data1: 30,
+          data2: 40,
+          data3: 50,
+          data4: 60,
+        },
+        {
+          name: "Tulips",
+          data1: 130,
+          data2: 80,
+          data3: 180,
+          data4: 100,
+        },
+        {
+          name: "Daisies",
+          data1: 110,
+          data2: 110,
+          data3: 130,
+          data4: 90,
+        },
+        {
+          name: "Narcissuses",
+          data1: 100,
+          data2: 50,
+          data3: 20,
+          data4: 200,
         },
       ],
     });
