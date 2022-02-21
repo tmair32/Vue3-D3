@@ -50,19 +50,6 @@ const state = reactive<State>({
   svgHeight: 0,
 });
 
-const getLegendPosition = (
-  type: string,
-  mode: string,
-  i: number,
-  radius: number
-) => {
-  if (type === "x") {
-    return mode === "dot" ? -30 : -15;
-  } else if (type === "y") {
-    return mode === "dot" ? radius + 15 : radius + 20;
-  }
-};
-
 const drawChart = (chartData: chartDataItems, xKey: string, yKey: string) => {
   const containerRef = ref();
 

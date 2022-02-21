@@ -1,5 +1,9 @@
 <template>
-  <div class="m-4">
+  <div class="m-4 flex justify-center flex-col">
+    <!-- || BoxPlot Chart || -->
+    <box-plot-chart :chartData="plotData" xKey="name" yKey="amount" />
+    <!-- || Zoomable Bar Chart || -->
+    <!-- <zoomable-bar-chart :chartData="objectData" xKey="name" yKey="amount" /> -->
     <!-- || Pie Chart || -->
     <pie-chart :chartData="objectData" xKey="name" yKey="amount" />
 
@@ -35,7 +39,9 @@ import { randomInt, interval, now } from "d3";
 import LineAreaChart from "@/components/LineAreaChart.vue";
 // import BarChart from "@/components/BarChart.vue";
 import BarChart from "@/components/BarChartAxis.vue";
+import BoxPlotChart from "@/components/BoxPlotChart.vue";
 import PieChart from "@/components/PieChart.vue";
+// import ZoomableBarChart from "@/components/ZoomableBarChart.vue";
 
 const REFRESH_RATE = 2000;
 
@@ -45,6 +51,14 @@ type State = {
   min: number;
   max: number;
   objectData: Array<{ name: string; amount: number }>;
+  plotData: Array<{
+    name: string;
+    q1: number;
+    q3: number;
+    mid: number;
+    min: number;
+    max: number;
+  }>;
 };
 
 export default defineComponent({
@@ -53,6 +67,8 @@ export default defineComponent({
     LineAreaChart,
     BarChart,
     PieChart,
+    BoxPlotChart,
+    // ZoomableBarChart,
   },
   setup() {
     const state = reactive<State>({
@@ -76,6 +92,40 @@ export default defineComponent({
         {
           name: "Narcissuses",
           amount: 9,
+        },
+      ],
+      plotData: [
+        {
+          name: "Roses",
+          q1: 100,
+          q3: 150,
+          mid: 120,
+          min: 50,
+          max: 170,
+        },
+        {
+          name: "Tulips",
+          q1: 150,
+          q3: 190,
+          mid: 180,
+          min: 110,
+          max: 240,
+        },
+        {
+          name: "Daisies",
+          q1: 40,
+          q3: 160,
+          mid: 110,
+          min: 10,
+          max: 170,
+        },
+        {
+          name: "Narcissuses",
+          q1: 20,
+          q3: 200,
+          mid: 160,
+          min: 0,
+          max: 250,
         },
       ],
     });
