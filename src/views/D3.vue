@@ -1,7 +1,7 @@
 <template>
   <div class="m-4 flex justify-center flex-col">
     <!-- || Grouped Bar Chart || -->
-    <grouped-bar-chart :chartData="groupedData" xKey="batch" />
+    <grouped-bar-chart :chartData="groupedData" xKey="name" />
     <!-- || BoxPlot Chart || -->
     <box-plot-chart :chartData="plotData" xKey="name" yKey="amount" />
     <!-- || Zoomable Bar Chart || -->
